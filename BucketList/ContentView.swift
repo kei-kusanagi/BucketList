@@ -7,34 +7,23 @@
 
 import SwiftUI
 
-struct User: Identifiable, Comparable {
-    let id = UUID()
-    var firstName: String
-    var lastName: String
-
-    static func <(lhs: User, rhs: User) -> Bool {
-        lhs.lastName < rhs.lastName
-    }
-}
-
-
-
 struct ContentView: View {
-    let users = [
-        User(firstName: "Arnold", lastName: "Rimmer"),
-        User(firstName: "Kristine", lastName: "Kochanski"),
-        User(firstName: "David", lastName: "Lister"),
-    ].sorted()
-
-
     var body: some View {
-        List(users) { user in
-            Text("\(user.lastName), \(user.firstName)")
+        Button("Read and Write") {
+            let data = Data("Test Message".utf8) // Convertimos un mensaje en datos
+            let url = URL.documentsDirectory.appending(path: "message.txt") // Creamos la URL
+
+            do {
+                try data.write(to: url, options: [.atomic, .completeFileProtection]) // Guardamos el archivo
+                let input = try String(contentsOf: url) // Leemos el archivo
+                print(input) // Imprimimos el contenido
+            } catch {
+                print(error.localizedDescription) // Manejamos errores
+            }
         }
+
     }
 }
-
-
 
 #Preview {
     ContentView()
