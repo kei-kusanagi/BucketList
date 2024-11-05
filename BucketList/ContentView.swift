@@ -7,21 +7,43 @@
 
 import SwiftUI
 
-struct ContentView: View {
+
+enum LoadingState {
+    case loading, success, failed
+}
+
+struct LoadingView: View {
     var body: some View {
-        Button("Read and Write") {
-            let data = Data("Test Message".utf8) // Convertimos un mensaje en datos
-            let url = URL.documentsDirectory.appending(path: "message.txt") // Creamos la URL
+        Text("Cargando...")
+    }
+}
 
-            do {
-                try data.write(to: url, options: [.atomic, .completeFileProtection]) // Guardamos el archivo
-                let input = try String(contentsOf: url) // Leemos el archivo
-                print(input) // Imprimimos el contenido
-            } catch {
-                print(error.localizedDescription) // Manejamos errores
-            }
+struct SuccessView: View {
+    var body: some View {
+        Text("¡Éxito!")
+    }
+}
+
+struct FailedView: View {
+    var body: some View {
+        Text("Fallido.")
+    }
+}
+
+
+struct ContentView: View {
+    
+    @State private var loadingState = LoadingState.success
+
+    var body: some View {
+        switch loadingState {
+        case .loading:
+            LoadingView()
+        case .success:
+            SuccessView()
+        case .failed:
+            FailedView()
         }
-
     }
 }
 
